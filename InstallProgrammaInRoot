@@ -1,0 +1,59 @@
+#!/bin/bash
+installationroot="temp"
+if [ "$1" != "--postinstall" ]; then
+	rm -r $installationroot
+	mkdir -p $installationroot
+	mkdir -p docroot
+	emerge -pq --ignore-default-opts $*
+	variabile=$(emerge -pq --ignore-default-opts $* | grep "\[ebuild" | sed 's/\[ebuild\s\s*\S*\s*\] /=/g' | sed 's/\s.*/ /g' | tr -d "\n")
+	if [ $? != 0 ]; then
+		echo "Error, exiting"
+		exit
+	fi
+	echo $variabile
+	export LINGUAS="en"
+	
+	emerge --nodeps --oneshot -uk $variabile
+	quickpkg --include-config=y $variabile
+	
+	export ROOT="$installationroot"
+	emerge --nodeps --oneshot -b -k app-admin/eselect-python python:2.6 $variabile || exit
+	emerge -1C python:2.6 app-admin/eselect-python &> /dev/null
+fi
+
+rm $installationroot/usr/bin/2to3
+rm $installationroot/usr/bin/pydoc
+rm $installationroot/usr/bin/python
+rm $installationroot/usr/bin/python-config
+rm $installationroot/usr/bin/python2
+
+rm $installationroot/var/lib/portage/world
+rm $installationroot/etc/gconf/gconf.xml.defaults/%gconf-tree.xml
+rm -r $installationroot/usr/share/gtk-doc
+rm -r $installationroot/etc/env.d/       
+rm -r $installationroot/etc/ld.so.cache  
+rm -r $installationroot/etc/ld.so.conf   
+if [ 1 -gt "$(diff /etc/csh.env $installationroot/etc/csh.env | grep -c "^> ")" ]; then rm -r $installationroot/etc/csh.env; fi
+if [ 1 -gt "$(diff /etc/profile.env $installationroot/etc/profile.env | grep -c "^> ")" ]; then	rm -r $installationroot/etc/profile.env; fi
+rm -r $installationroot/tmp
+rm -r $installationroot/var/tmp
+rm -r $installationroot/var/cache
+rm -r $installationroot/var/lib/gentoo/news
+
+rm -r $installationroot/usr/share/mime/mime.cache
+mkdir -p $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/aliases $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/magic $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/treemagic $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/icons $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/subclasses $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/generic-icons $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/types $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/globs $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/globs2 $installationroot/usr/share/mime/pixielive
+mv $installationroot/usr/share/mime/XMLnamespaces $installationroot/usr/share/mime/pixielive
+
+docdir="$(mktemp -d)"
+mv $installationroot/usr/share/doc $docdir
+mv $docdir docroot
+find "$installationroot" -depth -type d -empty -exec rmdir {} \;

@@ -1,0 +1,17 @@
+this contains my scripts for working with the gentoo based pixielive distro for gma500/poulsbo type netbooks
+
+mainly this repo contains MAKEFILE for the tasks i've 
+faced sofar. Most of this is based on the great work 
+of <INSERT)MAINTAINER_NAME_HERE>. In fact the <SCRIPTNAME>
+script is more or less his, with some simple cleanup to
+make the script more bashy and less linear.
+
+Most of this release aims at providing some crucial 
+packages that are missing from the main pixielive distro.
+
+I have taken some time to upgrade my system to a decent state
+as to be able to compile against the same version as pixielive 
+uses. Some of the libe are rather dirty and there is some USE
+flag mismatching going on. The most stable lzm I can offer for 
+now is the lastfm one, keep in mind though, that is was compiled
+with USE=-ipod though.
