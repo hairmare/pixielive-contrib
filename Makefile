@@ -63,3 +63,7 @@ dist/blender.lzm:
 		media-gfx/blender
 	mksquashfs ./temp dist/blender.lzm -b 256k
 
+dist/picasa.lzm:
+	./InstallProgrammaInRoot \
+		media-gfx/picasa
+	mksquashfs ./temp dist/picasa.lzm -b 256k
