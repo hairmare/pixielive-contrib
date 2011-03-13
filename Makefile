@@ -42,14 +42,24 @@ dist/openscad.lzm:
 
 # VLOG
 
-dist/cinelerra.lzm:
+# this lzm also replaces the stock ffmpeg lzm from pixielive
+dist/openshot.lzm:
 	./InstallProgrammaInRoot \
-		media-libs/libquicktime \
-		media-libs/faad2 \
-		sci-libs/fftw \
-		media-video/mjpegtools \
-		media-libs/ilmbase \
-		media-libs/openexr \
-		media-video/cinelerra
-	ln -s /usr/lib/libx264.so.107 ./temp/usr/lib/libx264.so.78
-	mksquashfs ./temp cinelerra.lzm -b 256k
+		dev-libs/DirectFB \
+		media-sound/gsm \
+		media-sound/sox \
+		media-libs/libvpx \
+		dev-python/librsvg-python \
+		media-video/ffmpeg \
+		media-plugins/frei0r-plugins \
+		x11-libs/goocanvas \
+		dev-python/pygoocanvas \
+		media-libs/mlt \
+		media-video/openshot
+	mksquashfs ./temp dist/openshot.lzm -b 256k
+
+dist/blender.lzm:
+	./InstallProgrammaInRoot \
+		media-gfx/blender
+	mksquashfs ./temp dist/blender.lzm -b 256k
+
